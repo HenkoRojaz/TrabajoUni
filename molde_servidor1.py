@@ -33,3 +33,14 @@ server_web.verificar_estado()
 server_db.mostrar_info()
 server_web.mostrar_info()
 
+#Se crea la clase hija SERVIDOR WEB.
+#Para heredar los atributos 
+class ServidorWeb(Servidor):
+    def auditar_web(self):
+        print(f"[{self.hostname}] Auditando vulnerabilidades en puertos  80 y 443 de la IP {self.ip}...")
+
+server_web = ServidorWeb("192.168.1.10","WEB-PROD-01", "Linux")
+
+server_web.verificar_estado()
+server_web.mostrar_info()
+server_web.auditar_web()
