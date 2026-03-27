@@ -1,6 +1,10 @@
 import os
 
+#class hace referencia al molde o plano que se usara para los objetos
 class Servidor:
+    #El consteructor __init__ Es un metodo especial que se ejecuta automaticamente cuando "Nace" un objeto
+    #Una vez establecido el __init__ se crean los atributos (Variables que pertenecen a ese objeto)
+    #self en Python significa "yo mismo". Se usa dentro del molde para que el objeto sepa que guarda sus propios datos
     def __init__(self, ip, hostname, os):
         self.ip = ip
         self.hostname = hostname
@@ -19,6 +23,7 @@ class Servidor:
     def mostrar_info(self):
         print(f"[{self.estado}] {self.hostname} ({self.ip}) - SO: {self.os}")
 
+#Es la cosa creada a partir del molde
 server_web = Servidor("192.168.1.0","WEB-PROD-01","LINUX")
 server_db = Servidor("10.0.0.5","DB-MAIN","Windows Server")
 
