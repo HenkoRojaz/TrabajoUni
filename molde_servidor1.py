@@ -36,11 +36,25 @@ server_web.mostrar_info()
 #Se crea la clase hija SERVIDOR WEB.
 #Para heredar los atributos 
 class ServidorWeb(Servidor):
-    def auditar_web(self):
+
+    #Se cambia el metodo de auditar_web por solo auditar
+    #def auditar_web(self):
+    def auditar(self):
         print(f"[{self.hostname}] Auditando vulnerabilidades en puertos  80 y 443 de la IP {self.ip}...")
 
-server_web = ServidorWeb("192.168.1.10","WEB-PROD-01", "Linux")
+#Se crea otra clase hija
+class ServidoBaseDeDatos(Servidor):
+    #Se define tambien un metodo llamado auditar
+    def auditar(self):
+        print(f"[{self.hostname}] Auditando inyecciones SQL en puerto 3306 de la IP {self.ip}")
 
-server_web.verificar_estado()
-server_web.mostrar_info()
-server_web.auditar_web()
+mi_web = ServidorWeb("192.168.1.0", "WEB-PROD", "Linux")
+mi_sql = ServidoBaseDeDatos("10.0.0.5", "DB-MAIN", "Windows")
+
+#server_web = ServidorWeb("192.168.1.10","WEB-PROD-01", "Linux")
+#server_web.verificar_estado()
+#server_web.mostrar_info()
+#server_web.auditar()
+infraestructura = [mi_web,mi_sql]
+for equipo in infraestructura:
+    equipo.auditar()
