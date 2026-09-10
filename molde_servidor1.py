@@ -1,60 +1,55 @@
-import os
+"""
+Archivo original de práctica: Conceptos de Programación Orientada a Objetos en Python.
+Demuestra: Clases, Atributos, Instancias, Herencia y Polimorfismo.
+"""
 
-#class hace referencia al molde o plano que se usara para los objetos
+import os
+import platform
+
+# 'class' define el molde o plantilla para instanciar objetos
 class Servidor:
-    #El consteructor __init__ Es un metodo especial que se ejecuta automaticamente cuando "Nace" un objeto
-    #Una vez establecido el __init__ se crean los atributos (Variables que pertenecen a ese objeto)
-    #self en Python significa "yo mismo". Se usa dentro del molde para que el objeto sepa que guarda sus propios datos
-    def __init__(self, ip, hostname, os):
+    # El constructor __init__ se ejecuta automáticamente cuando nace un objeto.
+    # 'self' en Python hace referencia a la propia instancia del objeto.
+    def __init__(self, ip, hostname, os_name):
         self.ip = ip
         self.hostname = hostname
-        self.os = os
+        self.os_name = os_name
         self.estado = "Desconocido"
-    
+
     def verificar_estado(self):
-        respuesta = os.system(f"ping -n 1 {self.ip}")
+        # Adaptación multiplataforma para ping
+        param = "-n 1" if platform.system().lower() == "windows" else "-c 1"
+        respuesta = os.system(f"ping {param} {self.ip} > /dev/null 2>&1")
 
         if respuesta == 0:
             self.estado = "Activo"
-        
         else:
-            self.estado = "Caido"
-            
+            self.estado = "Caído"
+
     def mostrar_info(self):
-        print(f"[{self.estado}] {self.hostname} ({self.ip}) - SO: {self.os}")
+        print(f"[{self.estado}] {self.hostname} ({self.ip}) - SO: {self.os_name}")
 
-#Es la cosa creada a partir del molde
-server_web = Servidor("192.168.1.0","WEB-PROD-01","LINUX")
-server_db = Servidor("10.0.0.5","DB-MAIN","Windows Server")
 
-server_db.verificar_estado()
-server_web.verificar_estado()
-
-server_db.mostrar_info()
-server_web.mostrar_info()
-
-#Se crea la clase hija SERVIDOR WEB.
-#Para heredar los atributos 
+# Clase hija ServidorWeb (Hereda de Servidor)
 class ServidorWeb(Servidor):
-
-    #Se cambia el metodo de auditar_web por solo auditar
-    #def auditar_web(self):
     def auditar(self):
-        print(f"[{self.hostname}] Auditando vulnerabilidades en puertos  80 y 443 de la IP {self.ip}...")
+        print(f"[{self.hostname}] Auditando vulnerabilidades en puertos 80 y 443 de la IP {self.ip}...")
 
-#Se crea otra clase hija
-class ServidoBaseDeDatos(Servidor):
-    #Se define tambien un metodo llamado auditar
+
+# Clase hija ServidorBaseDeDatos (Hereda de Servidor)
+class ServidorBaseDeDatos(Servidor):
     def auditar(self):
-        print(f"[{self.hostname}] Auditando inyecciones SQL en puerto 3306 de la IP {self.ip}")
+        print(f"[{self.hostname}] Auditando inyecciones SQL en puerto 3306 de la IP {self.ip}...")
 
-mi_web = ServidorWeb("192.168.1.0", "WEB-PROD", "Linux")
-mi_sql = ServidoBaseDeDatos("10.0.0.5", "DB-MAIN", "Windows")
 
-#server_web = ServidorWeb("192.168.1.10","WEB-PROD-01", "Linux")
-#server_web.verificar_estado()
-#server_web.mostrar_info()
-#server_web.auditar()
-infraestructura = [mi_web,mi_sql]
-for equipo in infraestructura:
-    equipo.auditar()
+if __name__ == "__main__":
+    print("--- Demostración Básica POO ---")
+    mi_web = ServidorWeb("127.0.0.1", "WEB-PROD", "Linux")
+    mi_sql = ServidorBaseDeDatos("10.0.0.5", "DB-MAIN", "Windows")
+
+    infraestructura = [mi_web, mi_sql]
+
+    for equipo in infraestructura:
+        equipo.verificar_estado()
+        equipo.mostrar_info()
+        equipo.auditar()
